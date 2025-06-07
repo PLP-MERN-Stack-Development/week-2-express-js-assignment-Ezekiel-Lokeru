@@ -1,0 +1,256 @@
+# Express.js Products API
+
+A RESTful API for managing products, built with Express.js. This project demonstrates CRUD operations, middleware usage (logging, authentication, validation), error handling, and advanced features like filtering, pagination, and search.
+
+---
+
+## 🚀 Features
+
+- CRUD operations for products
+- Custom logger middleware
+- Authentication middleware (API key)
+- Validation middleware for product data
+- Global error handling
+- Filtering, pagination, and search
+- Product statistics endpoint
+
+---
+
+## 🛠️ Setup & Running the Server
+
+1. **Clone the repository:**
+   ```
+   git clone <your-repo-url>
+   cd <your-repo-folder>
+   ```
+
+2. **Install dependencies:**
+   ```
+   npm install
+   ```
+
+3. **Set up environment variables:**
+   - Copy `.env.example` to `.env` and set your `API_KEY` value.
+
+4. **Start the server:**
+   ```
+   node server.js
+   ```
+   The server will run on [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 🔑 Authentication
+
+All `/api` routes require an API key in the request headers:
+
+```
+x-api-key: your_api_key_here
+```
+
+---
+
+## 📚 API Endpoints
+
+### Hello World
+
+- **GET /**  
+  Returns a welcome message.
+
+  **Response:**
+  ```json
+  { "message": "Hello World" }
+  ```
+
+---
+
+### Products Resource
+
+#### List All Products
+
+- **GET /api/products**
+- **Query Parameters:**
+  - `category` (string): Filter by category
+  - `search` (string): Search by product name
+  - `page` (number): Page number (default: 1)
+  - `limit` (number): Items per page (default: 10)
+
+**Example Request:**  
+`GET /api/products?category=electronics&search=phone&page=1&limit=2`
+
+**Example Response:**
+```json
+[
+  {
+    "id": "2",
+    "name": "Smartphone",
+    "description": "Latest model with 128GB storage",
+    "price": 800,
+    "category": "electronics",
+    "inStock": true
+  }
+]
+```
+
+---
+
+#### Get Product by ID
+
+- **GET /api/products/:id**
+
+**Example Request:**  
+`GET /api/products/1`
+
+**Example Response:**
+```json
+{
+  "id": "1",
+  "name": "Laptop",
+  "description": "High-performance laptop with 16GB RAM",
+  "price": 1200,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+---
+
+#### Create a New Product
+
+- **POST /api/products**
+- **Body:**  
+  ```json
+  {
+    "name": "Smartwatch",
+    "description": "Water-resistant smartwatch with heart rate monitor",
+    "price": 250,
+    "category": "electronics",
+    "inStock": true
+  }
+  ```
+
+**Example Response:**
+```json
+{
+  "id": "generated-uuid",
+  "name": "Smartwatch",
+  "description": "Water-resistant smartwatch with heart rate monitor",
+  "price": 250,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+---
+
+#### Update a Product
+
+- **PUT /api/products/:id**
+- **Body:**  
+  (Any or all fields can be updated)
+  ```json
+  {
+    "price": 900,
+    "inStock": false
+  }
+  ```
+
+**Example Response:**
+```json
+{
+  "id": "2",
+  "name": "Smartphone",
+  "description": "Latest model with 128GB storage",
+  "price": 900,
+  "category": "electronics",
+  "inStock": false
+}
+```
+
+---
+
+#### Delete a Product
+
+- **DELETE /api/products/:id**
+
+**Example Response:**
+```json
+{
+  "message": "Product deleted",
+  "product": {
+    "id": "3",
+    "name": "Coffee Maker",
+    "description": "Programmable coffee maker with timer",
+    "price": 50,
+    "category": "kitchen",
+    "inStock": false
+  }
+}
+```
+
+---
+
+#### Product Statistics
+
+- **GET /api/products/stats**
+
+**Example Response:**
+```json
+{
+  "electronics": 2,
+  "kitchen": 1
+}
+```
+
+---
+
+## 🧩 Middleware Overview
+
+- **Logger:** Logs request method, URL, and timestamp (`middleware/logger.js`)
+- **Authentication:** Checks for valid API key in headers (`middleware/auth.js`)
+- **Validation:** Ensures product data is valid on create/update (`middleware/validateProduct.js`)
+- **Error Handler:** Handles errors and sends appropriate responses (`middleware/errorHandler.js`)
+
+---
+
+## 🧪 Testing
+
+Use [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the API.  
+**Remember to include the `x-api-key` header in your requests.**
+
+---
+
+## 📄 Example curl Request
+
+```sh
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your_api_key_here" \
+  -d '{"name":"Smartwatch","description":"Water-resistant smartwatch with heart rate monitor","price":250,"category":"electronics","inStock":true}'
+```
+
+---
+
+## 📂 Project Structure
+
+```
+.
+├── server.js
+├── routes.js
+├── middleware/
+│   ├── logger.js
+│   ├── auth.js
+│   ├── validateProduct.js
+│   └── errorHandler.js
+├── errors/
+│   ├── NotFoundError.js
+│   └── ValidationError.js
+├── .env.example
+└── README.md
+```
+
+---
+
+## 📝 License
+
+MIT

@@ -9,8 +9,17 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const createProductRouter = require('./routes'); // Import the routes module
+
 // Middleware setup
 app.use(bodyParser.json());
+
+// Import custom middleware
+const logger = require('./middleware/logger'); // Import custom logger middleware
+app.use(logger); // Use the logger middleware
+
+const auth = require('./middleware/auth'); // Import custom authentication middleware
+app.use(auth); // Use the authentication middleware
 
 // Sample in-memory products database
 let products = [
@@ -39,6 +48,9 @@ let products = [
     inStock: false
   }
 ];
+
+// Use the router and pass the products array
+app.use(createProductRouter(products));
 
 // Root route
 app.get('/', (req, res) => {
